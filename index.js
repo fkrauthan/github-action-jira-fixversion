@@ -36,8 +36,10 @@ async function createAndSetVersion(projectKey, issueKeys, versionName, versionDe
     const issueKeyArr = issueKeys.split(",");
     for (let i = 0; i < issueKeyArr.length; i++) {
         const issueKey = issueKeyArr[i];
-        const issueId = await getIssueId(issueKey);
-        await setVersion(issueId, versionId);
+        if (issueKey) {
+            const issueId = await getIssueId(issueKey);
+            await setVersion(issueId, versionId);
+        }
     }
     // archive version (passing it as argument while creating version doesn't work
     if (versionArchived) {
