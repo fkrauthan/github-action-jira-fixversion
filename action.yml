@@ -17,9 +17,12 @@ inputs:
   versionName:
     description: 'The name of the Version to use'
     required: true
+  projectKey:
+    description: 'The project key (e.g. "TEST") - alternative to `issueKeys` for version updates'
+    required: false
   issueKeys:
     description: 'The key(s) of the issue(s) that is to be updated. If multiple are used, separate them with a comma (e.g. "TEST-1,TEST-2")'
-    required: true
+    required: false
   versionDescription:
     description: 'The description of the Version (default: "CD version")'
     required: false
