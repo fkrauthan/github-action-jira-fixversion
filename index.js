@@ -67,19 +67,24 @@ async function setFixVersion(jira, issueKey, versionId) {
 }
 
 async function createAndSetVersion(jira, opts) {
-    const issueKeyArr = opts.issueKeys.split(",").map(k => k.trim()).filter(Boolean);
-    if (issueKeyArr.length === 0) {
-        throw new Error('input "issueKeys" ist leer');
+    let projectKey = (opts.projectKey || "").trim();
+
+    const issueKeyArr = (opts.issueKeys ?? "").split(",").map(k => k.trim()).filter(Boolean);
+    if (issueKeyArr.length === 0 && projectKey.length === 0) {
+        throw new Error('input "issueKeys" and "projectKey" is empty');
+    }
+    if (projectKey.length === 0) {
+        projectKey = getProjectKey(issueKeyArr[0]);
     }
 
-    const projectId = await getProjectId(jira, getProjectKey(issueKeyArr[0]));
+    const projectId = await getProjectId(jira, projectKey);
     const versionId = await createOrGetVersion(
       jira, projectId, opts.versionName, opts.versionDescription,
     );
 
     for (const issueKey of issueKeyArr) {
         await setFixVersion(jira, issueKey, versionId);
-        core.info(`fixVersion ${opts.versionName} gesetzt auf ${issueKey}`);
+        core.info(`fixVersion ${opts.versionName} set for ${issueKey}`);
     }
 
     // released/archived nicht beim Anlegen setzbar; erst freigeben, dann archivieren
@@ -111,7 +116,8 @@ async function main() {
     });
 
     const versionId = await createAndSetVersion(jira, {
-        issueKeys: core.getInput("issueKeys", { required: true }),
+        projectKey: core.getInput("projectKey"),
+        issueKeys: core.getInput("issueKeys"),
         versionName: core.getInput("versionName", { required: true }),
         versionDescription: core.getInput("versionDescription") || "CD Version",
         versionArchived: core.getInput("versionArchived").toLowerCase() === "true",

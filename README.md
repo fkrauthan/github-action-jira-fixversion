@@ -10,6 +10,7 @@ The action will set the "fix version" in Jira to the given version (and creates 
 - `username`: Jira Username
 - `password`: Jira Personal Access Token. Get it from [here](https://id.atlassian.com/manage-profile/security/api-tokens)
 - `versionName`: The name of the Version to use (e.g. "1.0.5")
+- `projectKey`: The project key (e.g. "TEST") - alternative to `issueKeys` for version updates
 - `issueKeys`: The key(s) of the issue(s) that is to be updated. If multiple are used, separate them with a comma (e.g. "TEST-1,TEST-2")
 - `versionDescription`: The description of the Version (default: "CD version")
 - `versionArchived`: Mark the new version as archived (default: `false`)
